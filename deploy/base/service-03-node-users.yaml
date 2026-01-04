@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: service-03-node-users }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: service-03-node-users } }
+  template:
+    metadata: { labels: { app: service-03-node-users } }
+    spec:
+      containers:
+      - name: service-03-node-users
+        image: REPLACE_WITH_ECR/service-03-node-users:TAG
+        ports: [{ containerPort: 3003 }]
+        readinessProbe:
+          httpGet: { path: /health, port: 3003 }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: service-03-node-users }
+spec:
+  selector: { app: service-03-node-users }
+  ports: [{ port: 3003, targetPort: 3003 }]

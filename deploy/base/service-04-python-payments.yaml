@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: service-04-python-payments }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: service-04-python-payments } }
+  template:
+    metadata: { labels: { app: service-04-python-payments } }
+    spec:
+      containers:
+      - name: service-04-python-payments
+        image: REPLACE_WITH_ECR/service-04-python-payments:TAG
+        ports: [{ containerPort: 5004 }]
+        readinessProbe:
+          httpGet: { path: /health, port: 5004 }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: service-04-python-payments }
+spec:
+  selector: { app: service-04-python-payments }
+  ports: [{ port: 5004, targetPort: 5004 }]

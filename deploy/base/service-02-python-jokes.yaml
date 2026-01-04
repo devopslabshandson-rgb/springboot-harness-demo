@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: service-02-python-jokes }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: service-02-python-jokes } }
+  template:
+    metadata: { labels: { app: service-02-python-jokes } }
+    spec:
+      containers:
+      - name: service-02-python-jokes
+        image: REPLACE_WITH_ECR/service-02-python-jokes:TAG
+        ports: [{ containerPort: 5002 }]
+        readinessProbe:
+          httpGet: { path: /health, port: 5002 }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: service-02-python-jokes }
+spec:
+  selector: { app: service-02-python-jokes }
+  ports: [{ port: 5002, targetPort: 5002 }]
